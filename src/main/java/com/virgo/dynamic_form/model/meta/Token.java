@@ -1,4 +1,4 @@
-package com.virgo.dynamic_form.model.meta.global;
+package com.virgo.dynamic_form.model.meta;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.virgo.dynamic_form.model.enums.TokenType;
@@ -7,6 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -16,8 +20,8 @@ import lombok.NoArgsConstructor;
 public class Token {
 
     @Id
-    @GeneratedValue
-    public Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long id;
 
     @Column(unique = true)
     public String token;
@@ -33,4 +37,10 @@ public class Token {
     @JsonIgnore
     @JoinColumn(name = "user_id")
     public UserEntity user;
+
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }

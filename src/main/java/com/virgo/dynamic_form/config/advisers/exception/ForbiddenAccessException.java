@@ -1,4 +1,4 @@
-package com.virgo.dynamic_form.utils.advisers.exception;
+package com.virgo.dynamic_form.config.advisers.exception;
 
 public class ForbiddenAccessException extends RuntimeException {
     public ForbiddenAccessException(String message) {
@@ -6,6 +6,6 @@ public class ForbiddenAccessException extends RuntimeException {
     }
 
     public ForbiddenAccessException() {
-        super("You are not allowed to access this information details");
+        super("Forbidden access");
     }
 }

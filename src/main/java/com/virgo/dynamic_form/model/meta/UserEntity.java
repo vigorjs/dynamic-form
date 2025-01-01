@@ -1,4 +1,4 @@
-package com.virgo.dynamic_form.model.meta.global;
+package com.virgo.dynamic_form.model.meta;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -42,12 +42,12 @@ public class UserEntity implements UserDetails {
 
     private LocalDateTime emailVerifiedAt;
 
-    private LocalDateTime deletedAt;
-
     @CreationTimestamp
+    @JsonIgnore
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
+    @JsonIgnore
     private LocalDateTime updatedAt;
 
     @Override

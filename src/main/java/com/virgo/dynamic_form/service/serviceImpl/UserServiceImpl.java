@@ -2,10 +2,10 @@ package com.virgo.dynamic_form.service.serviceImpl;
 
 import com.virgo.dynamic_form.dto.request.UserRequestDTO;
 import com.virgo.dynamic_form.dto.request.UserUpdateRequestDTO;
-import com.virgo.dynamic_form.model.meta.global.UserEntity;
+import com.virgo.dynamic_form.model.meta.UserEntity;
 import com.virgo.dynamic_form.repository.UserRepository;
 import com.virgo.dynamic_form.service.UserService;
-import com.virgo.dynamic_form.utils.advisers.exception.NotFoundException;
+import com.virgo.dynamic_form.config.advisers.exception.NotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

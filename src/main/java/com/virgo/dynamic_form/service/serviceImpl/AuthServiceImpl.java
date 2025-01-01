@@ -6,15 +6,16 @@ import com.virgo.dynamic_form.dto.request.RegisterRequestDTO;
 import com.virgo.dynamic_form.dto.response.AuthenticationResponseDTO;
 import com.virgo.dynamic_form.dto.response.RefreshTokenResponseDTO;
 import com.virgo.dynamic_form.model.enums.TokenType;
-import com.virgo.dynamic_form.model.meta.global.Token;
-import com.virgo.dynamic_form.model.meta.global.UserEntity;
+import com.virgo.dynamic_form.model.meta.Token;
+import com.virgo.dynamic_form.model.meta.UserEntity;
 import com.virgo.dynamic_form.repository.TokenRepository;
 import com.virgo.dynamic_form.repository.UserRepository;
 import com.virgo.dynamic_form.service.AuthService;
-import com.virgo.dynamic_form.utils.advisers.exception.DuplicateEntryException;
-import com.virgo.dynamic_form.utils.advisers.exception.InvalidTokenException;
-import com.virgo.dynamic_form.utils.advisers.exception.NotFoundException;
+import com.virgo.dynamic_form.config.advisers.exception.DuplicateEntryException;
+import com.virgo.dynamic_form.config.advisers.exception.InvalidTokenException;
+import com.virgo.dynamic_form.config.advisers.exception.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,6 +41,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
+    @Transactional
     public AuthenticationResponseDTO register(RegisterRequestDTO request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new DuplicateEntryException("Email already registered");
@@ -52,9 +55,9 @@ public class AuthServiceImpl implements AuthService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
-        var savedUser = userRepository.save(user);
-        var jwtToken = jwtUtils.generateToken(savedUser.getName(), TokenType.ACCESS);
-        var refreshToken = jwtUtils.generateToken(savedUser.getName(), TokenType.REFRESH);
+        UserEntity savedUser = userRepository.save(user);
+        String jwtToken = jwtUtils.generateToken(savedUser.getEmail(), TokenType.ACCESS);
+        String refreshToken = jwtUtils.generateToken(savedUser.getEmail(), TokenType.REFRESH);
         saveUserToken(user, jwtToken);
         saveUserToken(user, refreshToken);
         return AuthenticationResponseDTO.builder()
@@ -73,8 +76,8 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserEntity user = (UserEntity) authentication.getPrincipal();
-        var accessToken = jwtUtils.generateToken(user.getEmail(), TokenType.ACCESS);
-        var refreshToken = jwtUtils.generateToken(user.getEmail(), TokenType.REFRESH);
+        String accessToken = jwtUtils.generateToken(user.getEmail(), TokenType.ACCESS);
+        String refreshToken = jwtUtils.generateToken(user.getEmail(), TokenType.REFRESH);
         revokeAllUserTokens(user);
         saveUserToken(user, accessToken);
         saveUserToken(user, refreshToken);
@@ -123,7 +126,7 @@ public class AuthServiceImpl implements AuthService {
         }
         jwt = authHeader.substring(7);
 
-        var storedToken = tokenRepository.findByToken(jwt).orElse(null);
+        Token storedToken = tokenRepository.findByToken(jwt).orElse(null);
         if (storedToken != null) {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
@@ -134,7 +137,7 @@ public class AuthServiceImpl implements AuthService {
 
     private void saveUserToken(UserEntity user, String jwtToken) {
         TokenType tokenType = jwtUtils.getTokenType(jwtToken);
-        var token = Token.builder()
+        Token token = Token.builder()
                 .user(user)
                 .token(jwtToken)
                 .tokenType(tokenType)
@@ -145,7 +148,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void revokeAllUserTokens(UserEntity user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         if (validUserTokens.isEmpty())
             return;
         validUserTokens.forEach(token -> {

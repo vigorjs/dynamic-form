@@ -2,7 +2,7 @@ package com.virgo.dynamic_form.controller;
 
 import com.virgo.dynamic_form.dto.request.UserRequestDTO;
 import com.virgo.dynamic_form.dto.request.UserUpdateRequestDTO;
-import com.virgo.dynamic_form.model.meta.global.UserEntity;
+import com.virgo.dynamic_form.model.meta.UserEntity;
 import com.virgo.dynamic_form.service.UserService;
 import com.virgo.dynamic_form.utils.constant.EndpointConstant;
 import io.swagger.v3.oas.annotations.Operation;

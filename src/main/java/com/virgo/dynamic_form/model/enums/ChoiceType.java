@@ -1,11 +1,20 @@
 package com.virgo.dynamic_form.model.enums;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public enum ChoiceType {
-    SHORT_ANSWER,
-    PARAGRAPH,
-    DATE,
-    TIME,
+    @JsonProperty("multiple choice")
     MULTIPLE_CHOICE,
+    @JsonProperty("short answer")
+    SHORT_ANSWER,
+    @JsonProperty("time")
+    TIME,
+    @JsonProperty("date")
+    DATE,
+    @JsonProperty("dropdown")
     DROPDOWN,
-    CHECKBOXES
+    @JsonProperty("paragraph")
+    PARAGRAPH,
+    @JsonProperty("checkboxes")
+    CHECKBOXES;
 }

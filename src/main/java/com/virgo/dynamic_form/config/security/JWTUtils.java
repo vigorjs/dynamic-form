@@ -1,10 +1,8 @@
 package com.virgo.dynamic_form.config.security;
 
 import com.virgo.dynamic_form.model.enums.TokenType;
-import com.virgo.dynamic_form.model.meta.global.UserEntity;
 import com.virgo.dynamic_form.repository.TokenRepository;
 import com.virgo.dynamic_form.repository.UserRepository;
-import com.virgo.dynamic_form.utils.advisers.exception.NotFoundException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -13,8 +11,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
