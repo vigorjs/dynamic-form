@@ -49,10 +49,13 @@ cp .env.example .env
    sudo docker compose up -d
     ```
 
+
+*NOTE : Seed Bisa dimatikan dari nilai SEED_DATABASE=boolean di ENV*
+
 ## Struktur Proyek
 ```
 src/main/java: Kode sumber utama aplikasi.
-src/main/resources: Berkas konfigurasi dan resource lainnya, termasuk Postman Collection untuk testing.
+src/main/resources: Berkas konfigurasi dan resource lainnya.
 pom.xml: Berkas konfigurasi Maven untuk mengelola dependensi dan build.
 ```
 
